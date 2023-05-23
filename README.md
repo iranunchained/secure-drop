@@ -15,6 +15,7 @@ Secure-drop provides a way for users to securely, using browser-side PGP encrypt
 
 Docker Compose.
 
+Using [nginx-proxy](https://github.com/nginx-proxy/) for https proxy
 
 ### Third Party Services
 
@@ -39,4 +40,4 @@ A server operator should follow best practises for security when setting up and 
 docker compose up
 ```
 
-The server will be listening on port 4200 (exposed to Docker host on port 80).
+The server will be listening on port 80 (exposed to Docker host on port 80).

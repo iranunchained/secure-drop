@@ -2,13 +2,17 @@ version: '3.8'
 
 services:
   web:
+    image: secure-drop:v1
     build: .
-    command: gunicorn server:app -w 4 -b 0.0.0.0:80 --access-logfile - --error-logfile -
+    command: gunicorn server:app -w 4 -b 0.0.0.0:8080 --access-logfile - --error-logfile -
     ports:
-      - "80:80"
+      - "8080:80"
+    restart: on-failure
     volumes:
       - .:/app
       - ./secure-drop:/secure-drop/files
+    expose:
+      - "8080"
     environment:
       FLASK_APP: server.py
       FLASK_DEBUG: ${DEBUG}
@@ -18,6 +22,8 @@ services:
       RECAPTCHASITEKEY: ${RECAPTCHASITEKEY}
       RECAPTCHASECRETKEY: ${RECAPTCHASECRETKEY}
       TOEMAIL: ${TOEMAIL}
- 
+      VIRTUAL_HOST: securedrop.iranunchained.com
+      VIRTUAL_PORT: 8080
+
 
 
