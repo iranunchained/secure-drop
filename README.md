@@ -39,4 +39,4 @@ A server operator should follow best practises for security when setting up and 
 docker compose up
 ```
 
-The server will be listening on 4200 port.
+The server will be listening on port 4200 (exposed to Docker host on port 80).

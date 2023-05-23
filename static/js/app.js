@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 function getCurrentKey() {
 	var recipient = document.getElementById("recipientSelect");
-	var recipientId = recipient.value; // here we expect one of 4: legal, devcon, esp, security
+	var recipientId = recipient.value; // here we expect a valid recipeint 
 	var publicKeyArmored = publicKeys[recipientId];
 	return publicKeyArmored;
 }
@@ -179,7 +179,7 @@ async function encrypt(msg) {
 	return { name: 'message', data: encryptedFixed };
 }
 
-async function encryptFile(filename, file) {
+async function encryptFile(filename, file) { //TODO Encrypt with two keys? figure out the key generation part
 	const publicKey = await openpgp.readKey({ armoredKey: getCurrentKey() });
 	const encrypted = await openpgp.encrypt({
 		message: await openpgp.createMessage({ binary: file }),

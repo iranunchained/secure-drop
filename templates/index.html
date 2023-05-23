@@ -5,7 +5,7 @@
 <script src="static/js/public-keys.js" type="text/javascript"></script>
 <script src="static/js/dropzone.min.js"></script>
 <link href="static/css/dropzone.min.css" rel="stylesheet" type="text/css" />
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_sitekey }}" async defer></script>
 <script src="static/js/app.js" type="text/javascript"></script>
 {% endblock %}
 {% block body %}
@@ -14,15 +14,15 @@
 		<fieldset>
 			<legend>Secure Submission Form</legend>
 			<span class="pure-form-message">
-				Please use this form when instructed by a member of the Ethereum Foundation to securely submit documents. You can submit any kind of file and an accompanying message.<br><br>
+				Please use this form when instructed by a member of the Iran Unchained to securely submit documents. You can submit any kind of file and an accompanying message.<br><br>
 				Your file and message will be strongly encrypted before leaving your device, and you will receive an ID unique to your submission. You may record this ID as it's not a secret, and you can use it to refer to the submission in future correspondence.<br><br>
 			</span>
 			<label id="recipientLabel" for="recipient">Recipient team:</label>
 			<select id="recipientSelect" required>
-				<option value="legal" selected>Legal</option>
-				<option value="devcon">Devcon</option>
+				<option value="IranUnchained" selected>IranUnchained</option>
+				<!-- <option value="devcon">Devcon</option>
 				<option value="esp">ESP</option>
-				<option value="security">Security</option>
+				<option value="security">Security</option> -->
 				{% if 0 %}<option value="oleh">Oleh</option>{% endif %}
 			</select>
 			<br>

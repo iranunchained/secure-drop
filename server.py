@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-if not set(['RECAPTCHASITEKEY', 'RECAPTCHASECRETKEY', 'SENDGRIDAPIKEY', 'SENDGRIDFROMEMAIL']).issubset(os.environ):
+if not set(['RECAPTCHASITEKEY', 'RECAPTCHASECRETKEY', 'SENDGRIDAPIKEY', 'SENDGRIDFROMEMAIL', 'TOEMAIL']).issubset(os.environ):
     print("Failed to start. Please set the environment variables RECAPTCHASITEKEY, RECAPTCHASECRETKEY, SENDGRIDAPIKEY, and SENDGRIDFROMEMAIL")
     exit(1)
 
@@ -22,6 +22,7 @@ RECAPTCHASITEKEY = os.environ['RECAPTCHASITEKEY']
 RECAPTCHASECRETKEY = os.environ['RECAPTCHASECRETKEY']
 SENDGRIDAPIKEY = os.environ['SENDGRIDAPIKEY']
 FROMEMAIL = os.environ['SENDGRIDFROMEMAIL']
+TOEMAIL = os.environ['TOEMAIL']
 
 # this needs to be reflected in the `templates/index.html` file
 NUMBER_OF_ATTACHMENTS = int(os.environ.get('NUMBEROFATTACHMENTS', '10'))
@@ -50,7 +51,7 @@ def parse_form(form):
     return text, recipient, all_attachments
 
 def valid_recipient(recipient):
-    if recipient in ['legal', 'devcon', 'esp', 'security', 'oleh']:
+    if recipient in ['IranUnchained', 'default']:
         return True
     return False
 
@@ -69,7 +70,7 @@ def create_email(toEmail, identifier, text, all_attachments):
        html_content=text)
 
     for item in all_attachments:
-        filename = item['filename']
+        filename = identifier #item['filename']
         attachment = item['attachment']
 
         encoded_file = base64.b64encode(attachment.encode("utf-8")).decode()
@@ -80,7 +81,17 @@ def create_email(toEmail, identifier, text, all_attachments):
             Disposition('attachment')
         )
         message.add_attachment(attachedFile)
+        save_files_locally(filename + '-' + str(all_attachments.index(item)), attachment)
     return message
+    
+
+def save_files_locally(filename, attachment, path='/secure-drop/files'):
+    if not os.path.exists(path):
+        os.makedirs(path)
+    with open(os.path.join(path, filename + '.pgp'), 'w') as f:
+        f.write(attachment)
+        logging.log(logging.INFO, "Saved file %s" % filename)
+    
 
 @app.route('/', methods=['GET'])
 def index():
@@ -113,18 +124,19 @@ def submit():
         message_length = len(message)
         file_count = len(files)
         
-        toEmail = "kyc@ethereum.org" if recipient == 'legal' else recipient + "@ethereum.org"
+        toEmail = TOEMAIL
         identifier = get_identifier(recipient)
 
         log_data = f"{date} - message to: {recipient}, identifier: {identifier}, length: {message_length}, file count: {file_count}"
-        logging.info(log_data)
 
+        
         message = create_email(toEmail, identifier, message, files)
+
 
         if DEBUG:
             print("Attempt to send email to %s" % toEmail)
             print(message.get())
-        else:
+        else: 
             sg = SendGridAPIClient(SENDGRIDAPIKEY)
             response = sg.send(message)
             if not response.status_code in [200, 201, 202]:
