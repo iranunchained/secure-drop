@@ -1,18 +1,45 @@
 version: '3.8'
 
 services:
+
+  # nginx-proxy:
+  #   image: nginxproxy/nginx-proxy
+  #   container_name: nginx-proxy
+  #   restart: on-failure
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - certs:/etc/nginx/certs
+  #     - vhost:/etc/nginx/vhost.d
+  #     - html:/usr/share/nginx/html
+  #     - ./nginx.conf:/etc/nginx/vhost.d/default
+
+  # nginx-proxy-acme:
+  #   image: nginxproxy/acme-companion
+  #   container_name: nginx-proxy-acme
+  #   restart: on-failure
+  #   volumes_from:
+  #     - nginx-proxy
+  #   volumes:
+  #     - /var/run/docker.sock:/tmp/docker.sock:ro
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #     - acme:/etc/acme.sh
+  #   environment:
+  #     DEFAULT_EMAIL: disobey@monster.wtf
+
   web:
     image: secure-drop:v1
     build: .
-    command: gunicorn server:app -w 4 -b 0.0.0.0:8080 --access-logfile - --error-logfile -
-    ports:
-      - "8080:80"
+    command: gunicorn server:app -w 4 -b 0.0.0.0:80 --access-logfile - --error-logfile -
     restart: on-failure
     volumes:
       - .:/app
       - ./secure-drop:/secure-drop/files
     expose:
-      - "8080"
+      - "80"
     environment:
       FLASK_APP: server.py
       FLASK_DEBUG: ${DEBUG}
@@ -23,7 +50,10 @@ services:
       RECAPTCHASECRETKEY: ${RECAPTCHASECRETKEY}
       TOEMAIL: ${TOEMAIL}
       VIRTUAL_HOST: securedrop.iranunchained.com
-      VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: securedrop.iranunchained.com
 
-
-
+volumes:
+  certs:
+  vhost:
+  html:
+  acme:

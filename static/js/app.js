@@ -15,10 +15,10 @@ Dropzone.options.dropzoneArea = {
 			return total + f.size;
 		  }, 0);
 		  
-		  // If the total added file size is greater than 15 MB, remove the file
-		  if (totalSize > 15 * 1024 * 1024) {
+		  // If the total added file size is greater than 5 MB, remove the file
+		  if (totalSize > 5 * 1024 * 1024) {
 			this.removeFile(file);
-			alert("Total file size exceeded the limit of 15 MB, file cannot be added.");
+			alert("Total file size exceeded the limit of 5 MB, file cannot be added.");
 		  }
 		});
 		
@@ -43,7 +43,7 @@ function initDropzone() {
 		addRemoveLinks: true,
 		uploadMultiple: true,
 		dictDefaultMessage: 'You may drop files here to upload',
-		maxFilesize: 15, // Max file size per file
+		maxFilesize: 6, // Max file size per file
 		maxFiles: 10, // Max number of files
 		init: function() {
 		  this.on("addedfile", function(file) {
@@ -52,10 +52,10 @@ function initDropzone() {
 			  return total + f.size;
 			}, 0);
 			
-			// If the total added file size is greater than 15 MB, remove the file
-			if (totalSize > 15 * 1024 * 1024) {
+			// If the total added file size is greater than 5 MB, remove the file
+			if (totalSize > 5 * 1024 * 1024) {
 			  this.removeFile(file);
-			  alert("Total file size exceeded the limit of 15 MB.");
+			  alert("Total file size exceeded the limit of 5 MB.");
 			}
 		  });
 		  
